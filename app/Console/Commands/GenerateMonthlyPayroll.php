@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Salary;
 use App\Models\Bonus;
 use App\Models\Deduction;
+use App\Models\Attendance;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -37,7 +38,17 @@ class GenerateMonthlyPayroll extends Command
         $users = User::all();
         $payrollData = [];
         $currentMonth = Carbon::now()->format('F');
+        $daysInMonth = Carbon::now()->daysInMonth;
         foreach ($users as $user) {
+            $attendanceCount = Attendance::where('user_id', $user->id)
+                                        ->where('month', $currentMonth)
+                                        ->where('status', 'Absent')
+                                        ->count();
+            $lateCount = Attendance::where('user_id', $user->id)
+                                        ->where('month', $currentMonth)
+                                        ->where('status', 'Late')
+                                        ->count();
+            $total_attended = $daysInMonth - $attendanceCount;
             $salary = Salary::where('grade', $user->grade)->value('total_salary');
             $monthly_bonus = DB::table('users_bonuses')
                             ->join('bonuses', 'users_bonuses.bonus_id', '=', 'bonuses.id') // Joining the bonuses table
@@ -66,13 +77,21 @@ class GenerateMonthlyPayroll extends Command
                             ->where('user_deductions.user_id', $user->id)  // Ensuring it applies in the right month
                             ->sum('deductions.rate');
             $deduction = $salary * ($deductionRate/100);
-            $payroll = $salary + $bonus - $deduction;
+            $fine = 0;
+            if($total_attended > 3)
+            {
+                $fine = $total_attended - 3;
+                $fine *= 500;
+            }
+            $fine += ($lateCount * 100);
+            $payroll = $salary + $bonus - $deduction - $fine;
 
             $payrollData[] = [
                 'user_id' => $user->id,
                 'salary' => $salary,
                 'bonus' => $bonus,
                 'deduction' => $deduction,
+                'fine' => $fine,
                 'payroll' => $payroll,
                 'month' => $currentMonth,
                 'created_at' => now(),

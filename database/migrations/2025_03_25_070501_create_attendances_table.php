@@ -13,17 +13,15 @@ return new class extends Migration
      */
     public function up()
     {
-      
-        Schema::create('payrolls', function (Blueprint $table) {
-            $table->id();
+        Schema::create('attendances', function (Blueprint $table) {
+            $table->id('atten_id');
             $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->decimal('salary', 10, 2);
-            $table->decimal('bonus', 10, 2);
-            $table->decimal('deduction', 10, 2);
-            $table->decimal('fine', 10, 2);
-            $table->decimal('payroll', 10, 2);
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->date('date')->default(now());
             $table->string('month');
+            $table->string('status')->nullable();
+            $table->time('check_in_time')->nullable();
+            $table->time('check_out_time')->nullable();
             $table->timestamps();
         });
     }
@@ -35,6 +33,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('payrolls');
+        Schema::dropIfExists('attendances');
     }
 };

@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('payroll:generate')->monthlyOn(1, '00:00');
+        // $schedule->command('attendance:mark-absent')->dailyAt('23:59');
     }
 
     /**

@@ -35,20 +35,6 @@
             </div>
 
             <!-- Position Field (Dropdown) -->
-            <div class="form-group">
-                <label for="position">Position</label>
-                <select name="position" id="designation" class="form-control">
-                    <option value="">-- Select Designation --</option>
-                    <option value="Professor" {{ old('position', $user->position) == 'Professor' ? 'selected' : '' }}>Professor</option>
-                    <option value="Associate Professor" {{ old('position', $user->position) == 'Associate Professor' ? 'selected' : '' }}>Associate Professor</option>
-                    <option value="Assistant Professor" {{ old('position', $user->position) == 'Assistant Professor' ? 'selected' : '' }}>Assistant Professor</option>
-                    <option value="Lecturer" {{ old('position', $user->position) == 'Lecturer' ? 'selected' : '' }}>Lecturer</option>
-                </select>
-                @error('position')
-                    <span class="text-danger">{{ $message }}</span>
-                @enderror
-            </div>
-
             <div class="mb-5">
                 <label for="deduction_id">Deduction Name: </label>
                 <div>

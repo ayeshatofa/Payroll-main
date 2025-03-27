@@ -84,10 +84,8 @@ class DepartmentController extends Controller
         ]);
         //$departments = DB::table('departments')->where('emp_id', $department->emp_id)->update([
             //'dep_name' => $request->dep_name,
-            $departments = DB::table('departments')->where('dep_id', $department->dep_id)->update([
-                'dep_name' => $request->dep_name,
-            
-            
+        $departments = DB::table('departments')->where('dep_id', $department->dep_id)->update([
+                'dep_name' => $request->dep_name,   
         ]);
         return redirect()->route('department.index')->with('msg', 'Department updated successfully');
     }

@@ -6,6 +6,7 @@ use App\Http\Controllers\BonusController;
 use App\Http\Controllers\DeductionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\AttendanceController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,6 +23,12 @@ Route::get('/', function () {
 });
 
 Route::resource('salary', SalaryController::class);
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/attendance', [AttendanceController::class, 'create'])->name('attendance.create');
+    Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
+});
+
 Route::get('bonus/{bonus}/edit', [BonusController::class, 'edit'])->name('bonus.edit');
 Route::put('bonus/{bonus}', [BonusController::class, 'update'])->name('bonus.update');
 

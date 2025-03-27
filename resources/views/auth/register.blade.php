@@ -64,10 +64,17 @@
                             <label for="designation">Designation: </label>
                             <select name="position" id="designation" class="form-control">
                                 <option value="">-- Select Designation --</option>
+                                <option value="VC" {{ old('designation') == 'VC' ? 'selected' : '' }}>VC</option>
+                                <option value="Pro VC" {{ old('designation') == 'Pro VC' ? 'selected' : '' }}>Pro VC</option>
+                                <option value="Treasurer" {{ old('designation') == 'Treasurer' ? 'selected' : '' }}>Treasurer</option>
+                                <option value="Registerer" {{ old('designation') == 'Registerer' ? 'selected' : '' }}>Registerer</option>
+                                <option value="Dean" {{ old('designation') == 'Dean' ? 'selected' : '' }}>Dean</option>
                                 <option value="Professor" {{ old('designation') == 'Professor' ? 'selected' : '' }}>Professor</option>
                                 <option value="Associate Professor" {{ old('designation') == 'Associate Professor' ? 'selected' : '' }}>Associate Professor</option>
                                 <option value="Assistant Professor" {{ old('designation') == 'Assistant Professor' ? 'selected' : '' }}>Assistant Professor</option>
                                 <option value="Lecturer" {{ old('designation') == 'Lecturer' ? 'selected' : '' }}>Lecturer</option>
+                                <option value="Senior Staff" {{ old('designation') == 'Senior Staff' ? 'selected' : '' }}>Senior Staff</option>
+                                <option value="Junior Staff" {{ old('designation') == 'Junior Staff' ? 'selected' : '' }}>Junior Staff</option>
                             </select>
                         
                             @error('position')

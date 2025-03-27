@@ -43,6 +43,11 @@ class User extends Authenticatable
     {
         return $this->belongsToMany(Deduction::class, 'user_deductions');
     }
+
+    public function attendances()
+    {
+        return $this->hasMany(Attendance::class, 'atten_id');
+    }
     /**
      * The attributes that should be hidden for serialization.
      *

@@ -16,7 +16,7 @@ class ProfileController extends Controller
             $query->whereNull('gradeNumbers')
                   ->orWhere('gradeNumbers', '[null]'); // Check if JSON is empty array
         })->get(); 
-        return view('profile.edit', compact(['user', 'deductions'])); // Assuming 'user.edit' is the view to edit user info
+        return view('profile.edit', compact(['user', 'deductions']));
     }
 
     public function update(Request $request)
@@ -25,36 +25,16 @@ class ProfileController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'address' => ['required', 'string'],
-            'position' => ['required', 'string'],
         ]);
         $user = auth()->user(); 
-        $grade = match ($request->position) {
-            'Professor' => 1,
-            'Associate Professor' => 2,
-            'Assistant Professor' => 3,
-            'Lecturer' => 4,
-            default => null, // Handle unexpected values
-        };
-
+        
         $user->update([
             'name' => $request->name,
             'address' => $request->address,
-            'position' => $request->position,
-            'grade' => $grade,
         ]);
-        $records = $grade !== null
-            ? Bonus::whereJsonContains('gradeNumbers', (string) $grade)->get()
-            : collect(); 
-
-        $bonusData = [];
-        foreach ($records as $record) {
-            $bonusData[$record->id] = ['month' => $record->month]; 
-        }
-        $user->bonuses()->sync($bonusData);
         
-
-        $records = $grade !== null
-        ? Deduction::whereJsonContains('gradeNumbers', (string) $grade)->get()
+        $records = $user->grade !== null
+        ? Deduction::whereJsonContains('gradeNumbers', (string) $user->grade)->get()
         : collect(); 
 
         // Attach all deduction records to the user

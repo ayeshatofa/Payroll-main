@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class PayrollConntroller extends Controller
+class AdminController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -13,7 +13,8 @@ class PayrollConntroller extends Controller
      */
     public function index()
     {
-        //
+        
+        return view('admin.index');
     }
 
     /**
@@ -54,9 +55,9 @@ class PayrollConntroller extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Admin $admin)
     {
-        //
+        return view('department.edit')->with('admin',$admin);
     }
 
     /**
@@ -66,9 +67,26 @@ class PayrollConntroller extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Admin $admin)
     {
-        //
+        $request->validate([
+            'position' => ['required', 'string'],
+        ]);
+
+        $grade = match ($data['position']) {
+            'VC' => 1,
+            'Pro VC' => 2,
+            'Treasurer', 'Registerer' => 3,
+            'Dean' => 4,
+            'Chairman' => 5,
+            'Professor' => 6,
+            'Associate Professor' => 7,
+            'Assistant Professor' => 8,
+            'Lecturer' => 9,
+            'Senior Staff' => 10,
+            'Junior Staff' => 11,
+            default => null, // Handle unexpected values
+        };
     }
 
     /**

@@ -53,10 +53,17 @@ class RegisterController extends Controller
     {
         // Determine the grade based on the position
         $grade = match ($data['position']) {
-            'Professor' => 1,
-            'Associate Professor' => 2,
-            'Assistant Professor' => 3,
-            'Lecturer' => 4,
+            'VC' => 1,
+            'Pro VC' => 2,
+            'Treasurer', 'Registerer' => 3,
+            'Dean' => 4,
+            'Chairman' => 5,
+            'Professor' => 6,
+            'Associate Professor' => 7,
+            'Assistant Professor' => 8,
+            'Lecturer' => 9,
+            'Senior Staff' => 10,
+            'Junior Staff' => 11,
             default => null, // Handle unexpected values
         };
 
