@@ -27,7 +27,7 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::middleware(['admin'])->group(function () {
+Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/search', [AdminController::class, 'search'])->name('admin.search');
     Route::resource('admin', AdminController::class);
     Route::resource('salary', SalaryController::class);
@@ -41,14 +41,14 @@ Route::middleware(['admin'])->group(function () {
     Route::resource('department', DepartmentController::class);
 });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'user'])->group(function () {
     
 });
 
 
-
-Route::middleware(['user'])->group(function () {
+Route::middleware(['auth', 'user'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/{user_id}/invoice', [ProfileController::class, 'invoice'])->name('profile.invoice');

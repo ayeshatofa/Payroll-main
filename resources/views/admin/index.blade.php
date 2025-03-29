@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
-{{-- @section('title')
+@section('title')
     DashBoard
-@endsection --}}
+@endsection
 
 @section('content')
     <div class="card">

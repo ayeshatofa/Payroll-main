@@ -12,6 +12,7 @@ use App\Models\Transaction;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Auth;
 
 class ProfileController extends Controller
 {
@@ -21,6 +22,13 @@ class ProfileController extends Controller
     }
 
     public function index()
+    {
+        $user = auth()->user();
+
+        return view('profile.index', compact('user'));
+    }
+
+    public function show()
     {
         $user = auth()->user();
 
@@ -35,7 +43,7 @@ class ProfileController extends Controller
 
         $transactions = Transaction::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
-        return view('profile.index', compact('user', 'record', 'transactions'));
+        return view('profile.show', compact('user', 'record', 'transactions'));
     }
     public function edit()
     {
@@ -78,11 +86,15 @@ class ProfileController extends Controller
         // dd($deduction_ids);
         $user->deductions()->sync($deduction_ids);
 
-        return redirect()->route('home')->with('success', 'User information updated successfully.');
+        return redirect()->route('profile.show')->with('success', 'User information updated successfully.');
     }
 
     public function invoice($id)
     {
+        if (Auth::id() !== (int)$id) {
+            abort(403, 'Unauthorized access.');
+        }
+
         // Fetch the user details
         $user = User::findOrFail($id);
 
@@ -96,7 +108,7 @@ class ProfileController extends Controller
                         ->first();
 
         if (!$record) {
-            return redirect()->route('home')->with('error', 'No payroll found for this user this month.');
+            return redirect()->route('profile.index')->with('error', 'No payroll found for this user this month.');
         }
 
 

@@ -1,4 +1,4 @@
-@extends('layout.master')
+@extends('layouts.app')
 
 @section('title')
     Search Page
@@ -9,10 +9,11 @@
 <div class="row">
   <div class="col-md-10 offset-md-1">
         <div class="card">
-            {{-- <div class="card-header d-flex justify-content-between align-items-center">
-              <h4>Deduction List</h4>
-              <a href="{{ route('deduction.create') }}" class="btn btn-primary">+ Add New Deduction</a>
-            </div> --}}
+            @if(session('msg'))
+            <div class="alert alert-success">
+                {{session('msg')}}
+            </div>
+            @endif
             <div class="card-body">
                 <table class="table table-bordered">
                     <thead>
