@@ -23,12 +23,10 @@ class AttendanceSeeder extends Seeder
         foreach ($users as $userId) {
             for ($i = 1; $i <= 30; $i++) { // Seed for a month
                 $date = Carbon::now()->subDays($i);
-                $month = $date->format('F');
+                $month = Carbon::now()->subMonth()->format('F');
 
-                // Random status (Present, Absent, Late)
                 $status = ['Present', 'Absent', 'Late'][rand(0, 2)];
 
-                // Random check-in and check-out times
                 $checkInTime = $status !== 'Absent' ? Carbon::parse('09:00:00')->addMinutes(rand(0, 60)) : null;
                 $checkOutTime = $status !== 'Absent' ? Carbon::parse('17:00:00')->addMinutes(rand(-30, 30)) : null;
 

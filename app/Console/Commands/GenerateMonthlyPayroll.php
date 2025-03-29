@@ -35,17 +35,18 @@ class GenerateMonthlyPayroll extends Command
      */
     public function handle()
     {
-        $users = User::all();
+        $users = User::where('role', '!=', 'admin')->get();
         $payrollData = [];
         $currentMonth = Carbon::now()->format('F');
+        $preMonth = Carbon::now()->subMonth()->format('F');
         $daysInMonth = Carbon::now()->daysInMonth;
         foreach ($users as $user) {
             $attendanceCount = Attendance::where('user_id', $user->id)
-                                        ->where('month', $currentMonth)
+                                        ->where('month', $preMonth)
                                         ->where('status', 'Absent')
                                         ->count();
             $lateCount = Attendance::where('user_id', $user->id)
-                                        ->where('month', $currentMonth)
+                                        ->where('month', $preMonth)
                                         ->where('status', 'Late')
                                         ->count();
             $total_attended = $daysInMonth - $attendanceCount;

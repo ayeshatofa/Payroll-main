@@ -13,15 +13,14 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('attendances', function (Blueprint $table) {
-            $table->id('atten_id');
+        Schema::create('taxes', function (Blueprint $table) {
+           $table->id();
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->date('date')->default(now());
+            $table->decimal('tax_rate', 5, 2);
+            $table->decimal('tax_amount', 10, 2);
+            $table->decimal('payable_salary', 10, 2);
             $table->string('month');
-            $table->string('status')->nullable();
-            $table->time('check_in_time')->nullable();
-            $table->time('check_out_time')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +32,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attendances');
+        Schema::dropIfExists('taxes');
     }
 };

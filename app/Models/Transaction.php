@@ -5,19 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Payroll extends Model
+class Transaction extends Model
 {
     use HasFactory;
-    protected $table = 'payrolls';
-    protected $fillable = [
-        'salary',
-        'bonus',
-        'deduction',
-        'fine',
-        'user_id',
-        'month',
-        'payroll'
-    ];
+
+    protected $table = 'transactions';
+    protected $fillable = ['amount', 'description', 'month', 'user_id'];
 
     public function users()
     {

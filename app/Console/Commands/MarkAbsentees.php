@@ -32,9 +32,11 @@ class MarkAbsentees extends Command
     {
         $today = Carbon::now()->toDateString();
         $currentMonth = Carbon::now()->format('F');
-        $users = User::whereDoesntHave('attendances', function ($query) use ($today) {
-            $query->whereDate('date', $today);
-        })->get();
+        $users = User::where('role', '!=', 'admin') 
+                    ->whereDoesntHave('attendances', function ($query) use ($today) {
+                        $query->whereDate('date', $today);
+                    })
+                    ->get();
 
         foreach ($users as $user) {
             Attendance::create([

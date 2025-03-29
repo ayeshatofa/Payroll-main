@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Models\Bonus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
@@ -18,6 +19,9 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
+    const ROLE_ADMIN = 'admin';
+    const ROLE_USER = 'user';
+    
     protected $fillable = [
         'name',
         'email',
@@ -30,7 +34,7 @@ class User extends Authenticatable
     ];
     public function departments(): BelongsTo
     {
-        return $this->belongsTo(Deparment::class, 'dep_id'); 
+        return $this->belongsTo(Department::class, 'dep_id'); 
     }
     
     public function bonuses()
@@ -47,6 +51,21 @@ class User extends Authenticatable
     public function attendances()
     {
         return $this->hasMany(Attendance::class, 'atten_id');
+    }
+
+    public function payrolls()
+    {
+        return $this->hasMany(Payrol::class,);
+    }
+
+    public function taxes()
+    {
+        return $this->hasMany(Tax::class,);
+    }
+
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class,);
     }
     /**
      * The attributes that should be hidden for serialization.

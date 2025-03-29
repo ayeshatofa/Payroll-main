@@ -29,6 +29,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UserBonusAndDeductionSeeder::class,
             AttendanceSeeder::class,
+            AdminSeeder::class,
         ]);
     }
 }

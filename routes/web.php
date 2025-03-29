@@ -7,6 +7,9 @@ use App\Http\Controllers\DeductionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\PaymentController;
+//use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -23,6 +26,13 @@ Route::get('/', function () {
 });
 
 Route::resource('salary', SalaryController::class);
+Route::get('admin/search', [AdminController::class, 'search'])->name('admin.search');
+Route::resource('admin', AdminController::class);
+
+Route::get('stripe', [PaymentController::class, 'index'])->name('stripe.index');
+Route::get('stripe/{id}/create', [PaymentController::class, 'create'])->name('stripe.create');
+Route::post('stripe', [PaymentController::class, 'charge'])->name('stripe.charge');
+Route::get('/profile/{user_id}/invoice', [ProfileController::class, 'invoice'])->name('profile.invoice');
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/attendance', [AttendanceController::class, 'create'])->name('attendance.create');
@@ -37,9 +47,14 @@ Route::resource('deduction', DeductionController::class);
 Route::resource('department', DepartmentController::class);
 Auth::routes();
 Route::middleware(['auth'])->group(function () {
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
 });
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+
+
+//eita add korsi
