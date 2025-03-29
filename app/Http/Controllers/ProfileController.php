@@ -15,6 +15,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProfileController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('user'); 
+    }
+
     public function index()
     {
         $user = auth()->user();

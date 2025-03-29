@@ -8,6 +8,7 @@ use App\Models\Bonus;
 use App\Models\Deduction;
 use App\Models\Department;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class AdminController extends Controller
 {
@@ -16,6 +17,11 @@ class AdminController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function __construct()
+    {
+        $this->middleware('admin'); // Only Admins can access
+    }
+
     public function index()
     {
         return view('admin.index');

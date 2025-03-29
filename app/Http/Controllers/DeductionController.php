@@ -15,6 +15,12 @@ class DeductionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('admin'); // Only Admins can access
+    }
+
     public function index()
     {
         $deductions = DB::table('deductions')->get();

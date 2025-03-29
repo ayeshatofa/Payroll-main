@@ -14,6 +14,11 @@ use Illuminate\Support\Facades\Mail;
 
 class PaymentController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('admin'); // Only Admins can access
+    }
+    
     public function index()
     {
         $users = User::all();

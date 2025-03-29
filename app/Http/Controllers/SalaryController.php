@@ -13,6 +13,12 @@ class SalaryController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('admin'); // Only Admins can access
+    }
+
     public function index()
     {
         $salaries = DB::table('salaries')->get();

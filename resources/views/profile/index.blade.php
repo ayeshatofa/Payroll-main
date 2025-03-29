@@ -1,8 +1,8 @@
-@extends('layout.master')
+@extends('layouts.app')
 
-@section('title')
+{{-- @section('title')
     {{ $user->name }}'s Profile
-@endsection
+@endsection --}}
 
 @section('content')
 <div class="container mt-5">

@@ -25,36 +25,37 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('salary', SalaryController::class);
-Route::get('admin/search', [AdminController::class, 'search'])->name('admin.search');
-Route::resource('admin', AdminController::class);
+Auth::routes();
 
-Route::get('stripe', [PaymentController::class, 'index'])->name('stripe.index');
-Route::get('stripe/{id}/create', [PaymentController::class, 'create'])->name('stripe.create');
-Route::post('stripe', [PaymentController::class, 'charge'])->name('stripe.charge');
-Route::get('/profile/{user_id}/invoice', [ProfileController::class, 'invoice'])->name('profile.invoice');
-
-Route::middleware(['auth'])->group(function () {
-    Route::get('/attendance', [AttendanceController::class, 'create'])->name('attendance.create');
-    Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
+Route::middleware(['admin'])->group(function () {
+    Route::get('admin/search', [AdminController::class, 'search'])->name('admin.search');
+    Route::resource('admin', AdminController::class);
+    Route::resource('salary', SalaryController::class);
+    Route::get('bonus/{bonus}/edit', [BonusController::class, 'edit'])->name('bonus.edit');
+    Route::put('bonus/{bonus}', [BonusController::class, 'update'])->name('bonus.update');
+    Route::resource('bonus', BonusController::class)->only(['index', 'create', 'store']);
+    Route::get('stripe', [PaymentController::class, 'index'])->name('stripe.index');
+    Route::get('stripe/{id}/create', [PaymentController::class, 'create'])->name('stripe.create');
+    Route::post('stripe', [PaymentController::class, 'charge'])->name('stripe.charge');
+    Route::resource('deduction', DeductionController::class);
+    Route::resource('department', DepartmentController::class);
 });
 
-Route::get('bonus/{bonus}/edit', [BonusController::class, 'edit'])->name('bonus.edit');
-Route::put('bonus/{bonus}', [BonusController::class, 'update'])->name('bonus.update');
-
-Route::resource('bonus', BonusController::class)->only(['index', 'create', 'store']);
-Route::resource('deduction', DeductionController::class);
-Route::resource('department', DepartmentController::class);
-Auth::routes();
 Route::middleware(['auth'])->group(function () {
+    
+});
+
+
+
+Route::middleware(['user'])->group(function () {
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
     Route::get('/profile/edit', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/{user_id}/invoice', [ProfileController::class, 'invoice'])->name('profile.invoice');
+    Route::get('/attendance', [AttendanceController::class, 'create'])->name('attendance.create');
+    Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
 });
 
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-
-
-//eita add korsi
