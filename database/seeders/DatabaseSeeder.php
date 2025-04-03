@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
+            PositionSeeder::class,
             SalarySeeder::class,
             DepartmentSeeder::class,
             BonusSeeder::class,

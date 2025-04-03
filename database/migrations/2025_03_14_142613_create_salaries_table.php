@@ -19,6 +19,7 @@ return new class extends Migration
             $table->decimal('allowance', 10, 2);
             $table->decimal('total_salary', 10, 2);
             $table->integer('grade');
+            $table->json('position');
             $table->decimal('tax_rate', 10, 2);
             $table->timestamps(); 
         });

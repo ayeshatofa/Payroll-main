@@ -16,6 +16,7 @@
                 <table class="table table-striped table-bordered text-center">
                     <thead class="table-dark">
                         <tr>
+                            <th>#</th> 
                             <th>Department ID</th>
                             <th>Department Name</th>
                             <th>Actions</th>
@@ -24,6 +25,7 @@
                     <tbody>
                         @foreach ($departments as $department) 
                             <tr>
+                                <td>{{ $loop->iteration }}</td> 
                                 <td>{{ $department->dep_id }}</td>
                                 <td>{{ $department->dep_name }}</td>
                                 <td>

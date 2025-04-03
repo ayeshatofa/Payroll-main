@@ -37,13 +37,7 @@
                             <span class="text-danger">{{ $message }}</span>
                         @enderror
                     </div>
-                    <div class="mb-5">
-                        <label for="grade">Grade:</label>
-                        <input type="number" name="grade" id="grade" class="form-control" value="{{ $salary->grade }}" required>
-                        @error('grade')
-                            <span class="text-danger">{{ $message }}</span>
-                        @enderror
-                    </div>
+                            
                     <div class="text-end">
                         <button type="submit" class="btn btn-primary">Update</button>
                         <a href="{{ route('salary.index') }}" class="btn btn-secondary">Cancel</a>

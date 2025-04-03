@@ -1,4 +1,4 @@
-@extends('layouts.app')
+{{-- @extends('layouts.app')
 
 @section('title')
     Edit Bonus
@@ -133,5 +133,129 @@ document.addEventListener("DOMContentLoaded", function() {
 document.getElementById('bonusType').addEventListener('change', updateMonthField);
 
 
+</script>
+@endsection --}}
+@extends('layouts.app')
+
+@section('title')
+    Edit Bonus
+@endsection
+
+@section('content')
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">Edit Bonus</h4>
+                </div>
+                <div class="card-body">
+                    <form action="{{ route('bonus.update', $bonus->id) }}" method="post">
+                        @csrf
+                        @method('PUT')
+
+                        <!-- Name Field -->
+                        <div class="mb-3">
+                            <label for="name" class="form-label fw-bold">Bonus Name</label>
+                            <input type="text" name="name" id="name" class="form-control" 
+                                value="{{ old('name', $bonus->name) }}" required>
+                            @error('name')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Bonus Type Field -->
+                        <div class="mb-3">
+                            <label for="bonusType" class="form-label fw-bold">Bonus Type</label>
+                            <select name="bonusType" id="bonusType" class="form-select">
+                                <option value="">Select Bonus Type</option>
+                                <option value="Monthly" {{ old('bonusType', $bonus->bonusType) == 'Monthly' ? 'selected' : '' }}>Monthly</option>
+                                <option value="Half-yearly" {{ old('bonusType', $bonus->bonusType) == 'Half-yearly' ? 'selected' : '' }}>Half-yearly</option>
+                                <option value="Annually" {{ old('bonusType', $bonus->bonusType) == 'Annually' ? 'selected' : '' }}>Annually</option>
+                            </select>
+                            @error('bonusType')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Month Selection -->
+                        <div class="mb-3" id="monthField">
+                            <label for="month" class="form-label fw-bold">Applicable Months</label>
+                            <select name="month[]" id="month" class="form-select" multiple>
+                                <option value="Every" {{ in_array('Every', old('month', json_decode($bonus->month, true) ?? [])) ? 'selected' : '' }}>Every</option>
+                                @foreach(['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'] as $month)
+                                    <option value="{{ $month }}" {{ in_array($month, old('month', json_decode($bonus->month, true) ?? [])) ? 'selected' : '' }}>
+                                        {{ $month }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('month')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Rate Field -->
+                        <div class="mb-3">
+                            <label for="rate" class="form-label fw-bold">Bonus Rate (%)</label>
+                            <input type="number" name="rate" id="rate" class="form-control" 
+                                value="{{ old('rate', $bonus->rate) }}" required>
+                            @error('rate')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Grade Numbers -->
+                        <div class="mb-3">
+                            <label for="gradeNumbers" class="form-label fw-bold">Applicable Grades</label>
+                            <select name="gradeNumbers[]" id="gradeNumbers" class="form-select" multiple>
+                                @foreach($grades as $grade)
+                                    <option value="{{ $grade }}" 
+                                        {{ in_array($grade, old('gradeNumbers', json_decode($bonus->gradeNumbers, true) ?? [])) ? 'selected' : '' }}>
+                                        Grade {{ $grade }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('gradeNumbers')
+                                <small class="text-danger">{{ $message }}</small>
+                            @enderror
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="d-flex justify-content-between mt-4">
+                            <button type="submit" class="btn btn-success px-4">Update</button>
+                            <a href="{{ route('bonus.index') }}" class="btn btn-danger px-4">Back</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script>
+    function updateMonthField() {
+        var bonusType = document.getElementById('bonusType').value;
+        var monthField = document.getElementById('month');
+        var selectedMonths = @json(old('month', json_decode($bonus->month, true) ?? []));
+        
+        monthField.innerHTML = ''; // Clear previous options
+        
+        if (bonusType === 'Monthly') {
+            monthField.innerHTML = '<option value="Every" selected>Every</option>';
+        } else if (bonusType === 'Half-yearly' || bonusType === 'Annually') {
+            let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            months.forEach(month => {
+                monthField.innerHTML += `<option value="${month}" ${selectedMonths.includes(month) ? 'selected' : ''}>${month}</option>`;
+            });
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        updateMonthField();
+    });
+
+    document.getElementById('bonusType').addEventListener('change', updateMonthField);
 </script>
 @endsection

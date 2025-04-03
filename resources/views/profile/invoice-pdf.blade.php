@@ -66,11 +66,6 @@
         <div class="footer">
             <p>We appreciate your service.</p>
         </div>
-        <div class="text-center mt-4">
-            <a href="{{ route('profile.invoice.download', $user->id) }}" class="btn btn-danger">
-                Download PDF
-            </a>
-        </div>
     </div>
 </body>
 </html>

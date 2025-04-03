@@ -25,13 +25,6 @@ class ProfileController extends Controller
     {
         $user = auth()->user();
 
-        return view('profile.index', compact('user'));
-    }
-
-    public function show()
-    {
-        $user = auth()->user();
-
         $currentMonth = Carbon::now()->format('F');
 
         $record = DB::table('payrolls')
@@ -43,7 +36,45 @@ class ProfileController extends Controller
 
         $transactions = Transaction::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
 
-        return view('profile.show', compact('user', 'record', 'transactions'));
+
+        
+        return view('profile.index', compact('user', 'record', 'transactions'));
+    }
+
+    public function attendance()
+    {
+        $user = auth()->user();
+        $attendances = DB::table('attendances')->where('user_id', $user->id)->latest()->get();
+
+        return view('profile.attendance', compact('attendances'));
+    }
+    public function deduction()
+    {
+        $user = auth()->user();
+        $deductionIds = DB::table('user_deductions')->where('user_id', $user->id)->pluck('deduction_id');
+        $deductions = DB::table('deductions')
+            ->whereIn('id', $deductionIds)
+            ->get();
+
+        return view('profile.deduction', compact('deductions'));
+    }
+    public function bonus()
+    {
+        $user = auth()->user();
+        $bonusIds = DB::table('users_bonuses')->where('user_id', $user->id)->pluck('bonus_id');
+        $bonuses = DB::table('bonuses')
+             ->whereIn('id', $bonusIds)
+             ->get();
+
+        return view('profile.bonus', compact('bonuses'));
+    }
+    public function show()
+    {
+        $user = auth()->user();
+
+ 
+
+        return view('profile.show', compact('user'));
     }
     public function edit()
     {
@@ -57,17 +88,32 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-        // Validate the incoming request
         $request->validate([
             'name' => 'required|string|max:255',
-            'address' => ['required', 'string'],
+            'address' => 'required|string',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048', // Ensure valid image format
         ]);
-        $user = auth()->user(); 
-        
-        $user->update([
-            'name' => $request->name,
-            'address' => $request->address,
-        ]);
+    
+        $user = auth()->user();
+        $input = $request->except('image');
+   
+        // Handle Image Upload
+        if ($image = $request->file('image')) {
+            $destinationPath = 'storage/profile_images/'; // Store in storage/app/public/profile_images
+            $profileImage = date('YmdHis') . "." . $image->getClientOriginalExtension();
+            $image->move(public_path($destinationPath), $profileImage);
+    
+            if ($user->image && file_exists(public_path('storage/profile_images/' . $user->image))) {
+                unlink(public_path('storage/profile_images/' . $user->image));
+            }
+    
+            $input['image'] = $profileImage;
+        } else {
+            $input['image'] = $user->image; 
+        }
+    
+        // Update User Data
+        $user->update($input);
         
         $records = $user->grade !== null
         ? Deduction::whereJsonContains('gradeNumbers', (string) $user->grade)->get()
@@ -111,10 +157,32 @@ class ProfileController extends Controller
             return redirect()->route('profile.index')->with('error', 'No payroll found for this user this month.');
         }
 
+        return view('profile.invoice', compact(['user', 'record']));
 
-        $pdf = PDF::loadView('profile.invoice', compact(['user', 'record']));
-        return $pdf->download('invoice.pdf');
+
+        $pdf = PDF::loadView('profile.invoice-pdf', compact(['user', 'record']));
+        return $pdf->download('salary_invoice_' . $user->id . '.pdf');
     }
 
+    public function downloadInvoice($id)
+    {
+        $user = User::findOrFail($id);
+
+        $currentMonth = Carbon::now()->format('F');
+
+        $record = DB::table('payrolls')
+                        ->join('taxes', 'payrolls.user_id', '=', 'taxes.user_id')
+                        ->select('payrolls.*', 'taxes.tax_amount', 'taxes.tax_rate', 'taxes.payable_salary') // Adjust fields as needed
+                        ->where('payrolls.user_id', $id)
+                        ->where('payrolls.month', $currentMonth)
+                        ->first();
+
+        if (!$record) {
+            return redirect()->route('profile.index')->with('error', 'No payroll found for this user this month.');
+        }
+
+        $pdf = PDF::loadView('profile.invoice-pdf', compact(['user', 'record']));
+        return $pdf->download('salary_invoice_' . $user->id . '.pdf');
+    }
 
 }

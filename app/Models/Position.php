@@ -5,13 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Salary extends Model
+class Position extends Model
 {
     use HasFactory;
-    protected $table = 'salaries';
-    protected $primaryKey = 'salary_id';
+    protected $primaryKey = 'id';
     public $incrementing = true;
     protected $keyType = 'int';
-    
-    protected $fillable = ['basic_salary', 'allowance', 'grade','tax_rate', 'total_salary', 'position'];
+    protected $table = 'positions';
+    protected $fillable = ['name'];
 }

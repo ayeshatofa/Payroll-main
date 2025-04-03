@@ -10,6 +10,11 @@
         <div class="col">
             <div class="card">
                 <div class="card-body">
+                    @if(session('msg'))
+                        <div class="alert alert-success">
+                            {{session('msg')}}
+                        </div>
+                    @endif
                     <form action="{{ route('salary.store') }}" method="post">
                         @csrf
                         
@@ -43,7 +48,20 @@
                                 <span class="text-danger">{{ $message }}</span>
                             @enderror
                         </div>
-
+                        <div class="mb-5">
+                            <label for="position">Position: </label>
+                            <select name="position[]" id="position" class="form-control" multiple>
+                                @foreach($positions as $position)
+                                    <option value="{{ $position }}" 
+                                        {{ in_array($position, old('position', [])) ? 'selected' : '' }}>
+                                        {{ $position }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('position')
+                                <span class="text-danger">{{ $message }}</span>
+                            @enderror
+                        </div>                        
                         <div class="mb-5">
                             <button type="submit" class="btn btn-primary">Submit</button>
                         </div>

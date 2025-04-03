@@ -144,8 +144,9 @@ class DeductionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Deduction $deduction)
     {
-        //
+        DB::table('deductions')->where('id',$deduction->id)->delete();
+        return redirect()->route('deduction.index')->with('msg', 'Deduction removed successfully');
     }
 }

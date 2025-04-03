@@ -148,8 +148,9 @@ class BonusController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Bonus $bonus)
     {
-        //
+        DB::table('bonuses')->where('id',$bonus->id)->delete();
+        return redirect()->route('bonus.index')->with('msg', 'Bonus removed successfully');
     }
 }

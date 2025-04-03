@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Bonus;
 use App\Models\Deduction;
+use App\Models\Salary;
+use App\Models\Position;
 use App\Models\Department;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -84,20 +86,24 @@ class AdminController extends Controller
             'position' => ['required', 'string'],
         ]);
 
-        $grade = match ($request->position) {
-            'VC' => 1,
-            'Pro VC' => 2,
-            'Treasurer', 'Registerer' => 3,
-            'Dean' => 4,
-            'Chairman' => 5,
-            'Professor' => 6,
-            'Associate Professor' => 7,
-            'Assistant Professor' => 8,
-            'Lecturer' => 9,
-            'Senior Staff' => 10,
-            'Junior Staff' => 11,
-            default => null, // Handle unexpected values
-        };
+        $grade = Salary::whereJsonContains('position', $request->position)->value('grade');
+
+
+
+        // $grade = match ($request->position) {
+        //     'VC' => 1,
+        //     'Pro VC' => 2,
+        //     'Treasurer', 'Registerer' => 3,
+        //     'Dean' => 4,
+        //     'Chairman' => 5,
+        //     'Professor' => 6,
+        //     'Associate Professor' => 7,
+        //     'Assistant Professor' => 8,
+        //     'Lecturer' => 9,
+        //     'Senior Staff' => 10,
+        //     'Junior Staff' => 11,
+        //     default => null, // Handle unexpected values
+        // };
 
         $user = User::find($id);
 
@@ -163,6 +169,49 @@ class AdminController extends Controller
     public function search()
     {
         $users = User::with('departments')->latest()->take(10)->get();
-        return view('admin.search', compact('users'));
+        $departments = Department::all();
+        $positions = Position::all();
+        return view('admin.search', compact(['users', 'departments', 'positions']));
+    }
+    public function autocomplete(Request $request)
+    {
+        $term = $request->input('term');
+        
+        $users = User::where('role', '!=', 'admin')
+                    ->where('name', 'LIKE', '%'.$term.'%')
+                    ->take(10)
+                    ->get();
+        
+        $formattedUsers = $users->map(function($user) {
+            return [
+                'label' => $user->name,
+                'value' => $user->name
+            ];
+        });
+        
+        return response()->json($formattedUsers);
+    }
+    public function searchForm(Request $request)
+    {
+        $users = User::with('departments') // Eager load relationship
+            ->where('role', '<>', 'admin') // Exclude admins in query
+            ->when($request->name, function ($query, $name) {
+                return $query->where('name', 'LIKE', "%$name%");
+            })
+            ->when($request->department, function ($query, $department) {
+                return $query->where('dep_id', $department);
+            })
+            ->when($request->position, function ($query, $position) {
+                return $query->where('position', $position);
+            })
+            ->when($request->date_of_join, function ($query, $date) {
+                return $query->whereDate('date_of_join', '>=', $date);
+            })->get(); 
+        
+        return view('admin.view', [
+            'users' => $users,
+            'departments' => Department::all(), // Pass departments
+            'positions' => Position::all() // Pass positions
+        ]);
     }
 }

@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Salary;
+use App\Models\Position;
+use App\Models\User;
+use App\Models\Bonus;
+use App\Models\Deduction;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -32,7 +36,17 @@ class SalaryController extends Controller
      */
     public function create()
     {
-        return view('salary.create');
+        $allPositions = Position::pluck('name')->toArray(); // Get all positions from the Position table
+        $usedPositions = Salary::pluck('position')->toArray(); // Get all stored JSON positions
+
+        // Convert JSON-encoded positions to an array
+        $usedPositions = collect($usedPositions)->flatMap(function ($item) {
+            return json_decode($item, true); // Convert JSON string to an array
+        })->unique()->toArray();
+
+        // Get positions that are NOT in usedPositions
+        $positions = array_diff($allPositions, $usedPositions);
+        return view('salary.create', compact('positions'));
     }
 
     /**
@@ -48,17 +62,25 @@ class SalaryController extends Controller
             'allowance' => 'required|numeric|min:0',
             'tax_rate' => 'required|numeric|min:0',
             'grade' => 'required|numeric|min:0',
+            'position' => 'required|', // Ensures it's an array
         ]);
 
+        $gradeExists = Salary::where('grade', $request->grade)->exists();
+
+        if ($gradeExists) {
+            return redirect()->route('salary.create')->with('msg', 'Grade already exists. If you want to update it, go to edit.');
+        }     
+        
         $salaries = Salary::create([
             'basic_salary' => $request->basic_salary,
             'allowance' => $request->allowance,
             'tax_rate' => $request->tax_rate,
             'grade' => $request->grade,
+            'position' => json_encode($request->position),
             'total_salary' => ((float) $request->basic_salary + (float) $request->allowance)
         ]);    
  
-        return redirect()->route('salary.index')->with('msg', 'Employee updated successfully');
+        return redirect()->route('salary.index')->with('msg', 'Salary created successfully');
     }
 
     /**
@@ -80,7 +102,8 @@ class SalaryController extends Controller
      */
     public function edit(Salary $salary)
     {
-        return view('salary.edit')->with('salary',$salary);
+        $positions = Position::pluck('name');
+        return view('salary.edit')->with('salary',$salary)->with('positions', $positions);
     }
 
     /**
@@ -96,15 +119,15 @@ class SalaryController extends Controller
             'basic_salary' => 'required|numeric|min:0',
             'allowance' => 'required|numeric|min:0',
             'tax_rate' => 'required|numeric|min:0',
-            'grade' => 'required|numeric|min:0',
         ]);
+
         $salaries = DB::table('salaries')->where('salary_id', $salary->salary_id)->update([
             'basic_salary' => $request->basic_salary,
             'allowance' => $request->allowance,
             'tax_rate' => $request->tax_rate,
-            'grade' => $request->grade,
             'total_salary' => ((float) $request->basic_salary + (float) $request->allowance)
         ]);
+        
         return redirect()->route('salary.index')->with('msg', 'Salary updated successfully');
     }
 

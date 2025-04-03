@@ -16,7 +16,8 @@
                 <table class="table table-striped table-bordered text-center">
                   <thead class="table-dark">
                     <tr>
-                        <th>ID</th>
+                        <th>#</th>
+                        <th>Bonus ID</th>
                         <th>Name</th>
                         <th>Bonus Type</th>
                         <th>Month</th>
@@ -28,6 +29,7 @@
                   <tbody>
                       @foreach ($bonuses as $bonus)
                           <tr>
+                              <td>{{ $loop->iteration }}</td> 
                               <td>{{ $bonus->id }}</td>
                               <td>{{ $bonus->name }}</td>
                               <td>{{ $bonus->bonusType }}</td>
@@ -43,12 +45,12 @@
                               <td>
                                   <a href="{{ route('bonus.edit', $bonus->id) }}" class="btn btn-warning btn-sm">Edit</a>
                                   
-                                  {{-- <form action="{{ route('bonus.destroy', $bonus->id) }}" method="POST" class="d-inline" 
+                                  <form action="{{ route('bonus.destroy', $bonus->id) }}" method="POST" class="d-inline" 
                                         onsubmit="return confirm('Are you sure you want to delete this bonus?');">
                                       @csrf
                                       @method('DELETE')
                                       <button type="submit" class="btn btn-danger btn-sm">Delete</button>
-                                  </form> --}}
+                                  </form>
                               </td>
                           </tr>
                       @endforeach

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Bonus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable;
 
@@ -30,6 +30,7 @@ class User extends Authenticatable
         'address',
         'position',
         'grade',
+        'image',
         'dep_id'//forein key
     ];
     public function departments(): BelongsTo
@@ -66,6 +67,11 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class,);
+    }
+
+    public function position()
+    {
+        return $this->belongsTo(Position::class,);
     }
     /**
      * The attributes that should be hidden for serialization.
