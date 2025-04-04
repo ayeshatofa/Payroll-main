@@ -1,4 +1,4 @@
-{{-- @extends('layouts.app')
+@extends('layouts.app')
 
 @section('title')
     Edit Bonus
@@ -93,49 +93,58 @@
 @section('scripts')
 <script>
     function updateMonthField() {
-    var bonusType = document.getElementById('bonusType').value;
-    var monthField = document.getElementById('month');
-    var selectedMonths = @json(old('month', json_decode($bonus->month, true) ?? []));
-    
-    monthField.innerHTML = ''; // Clear previous options
-    
-    if (bonusType === 'Monthly') {
-        // Set "Every" as the only option for Monthly
-        monthField.innerHTML = '<option value="Every" selected>Every</option>';
-        // monthField.setAttribute('disabled', 'disabled'); // Disable field for Monthly
-    } else if (bonusType === 'Half-yearly') {
-        monthField.removeAttribute('disabled');
-        monthField.setAttribute('multiple', 'multiple');
+        var bonusType = document.getElementById('bonusType').value;
+        var monthField = document.getElementById('month');
 
-        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        // Reset month field
+        monthField.innerHTML = '';
 
-        months.forEach(month => {
-            monthField.innerHTML += `<option value="${month}" ${selectedMonths.includes(month) ? 'selected' : ''}>${month}</option>`;
-        });
-    } else if (bonusType === 'Annually') {
-        monthField.removeAttribute('disabled');
-        monthField.removeAttribute('multiple');
-
-        let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-
-        months.forEach(month => {
-            monthField.innerHTML += `<option value="${month}" ${selectedMonths.includes(month) ? 'selected' : ''}>${month}</option>`;
-        });
+        if (bonusType === 'Monthly') {
+            // Set single "Every" option for Monthly
+            monthField.innerHTML = '<option value="Every" selected>Every</option>';
+            monthField.removeAttribute('multiple');
+        } else if (bonusType === 'Half-yearly') {
+            // Allow multiple selections for Half-yearly
+            monthField.setAttribute('multiple', 'multiple');
+            let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            months.forEach(month => {
+                monthField.innerHTML += `<option value="${month}">${month}</option>`;
+            });
+        } else if (bonusType === 'Annually') {
+            // Only allow one selection for Annually
+            monthField.removeAttribute('multiple');
+            let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            months.forEach(month => {
+                monthField.innerHTML += `<option value="${month}">${month}</option>`;
+            });
+        }
     }
-}
 
-// Call the function on page load
-document.addEventListener("DOMContentLoaded", function() {
-    updateMonthField();
-});
+    function limitHalfYearlySelection(event) {
+        var bonusType = document.getElementById('bonusType').value;
+        var selectedMonths = Array.from(event.target.selectedOptions).map(option => option.value);
 
-// Attach event listener for the bonusType dropdown
-document.getElementById('bonusType').addEventListener('change', updateMonthField);
+        if (bonusType === 'Half-yearly' && selectedMonths.length > 2) {
+            alert("You can only select **TWO** months for Half-yearly bonuses.");
+            event.target.options[event.target.selectedIndex].selected = false; // Deselect the last selected option
+        }
+    }
 
+    document.addEventListener("DOMContentLoaded", function() {
+        updateMonthField();
 
+        // Add event listener to restrict selections
+        document.getElementById('month').addEventListener('change', limitHalfYearlySelection);
+    });
+
+    document.getElementById('bonusType').addEventListener('change', function() {
+        updateMonthField();
+        document.getElementById('month').addEventListener('change', limitHalfYearlySelection);
+    });
 </script>
-@endsection --}}
-@extends('layouts.app')
+@endsection
+
+{{-- @extends('layouts.app')
 
 @section('title')
     Edit Bonus
@@ -258,4 +267,4 @@ document.getElementById('bonusType').addEventListener('change', updateMonthField
 
     document.getElementById('bonusType').addEventListener('change', updateMonthField);
 </script>
-@endsection
+@endsection --}}

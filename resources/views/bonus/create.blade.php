@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-    Category Page
+    Bonus Page
 @endsection
 
 @section('content')
@@ -96,20 +96,19 @@
         // Reset month field
         monthField.innerHTML = '';
 
-
         if (bonusType === 'Monthly') {
-            // Set the hidden input to "Every" and disable the select
+            // Set single "Every" option for Monthly
             monthField.innerHTML = '<option value="Every" selected>Every</option>';
-            // monthField.setAttribute('disabled', 'disabled');
+            monthField.removeAttribute('multiple');
         } else if (bonusType === 'Half-yearly') {
-            monthField.removeAttribute('disabled');
+            // Allow multiple selections for Half-yearly
             monthField.setAttribute('multiple', 'multiple');
             let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             months.forEach(month => {
                 monthField.innerHTML += `<option value="${month}">${month}</option>`;
             });
         } else if (bonusType === 'Annually') {
-            monthField.removeAttribute('disabled');
+            // Only allow one selection for Annually
             monthField.removeAttribute('multiple');
             let months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
             months.forEach(month => {
@@ -118,10 +117,26 @@
         }
     }
 
+    function limitHalfYearlySelection(event) {
+        var bonusType = document.getElementById('bonusType').value;
+        var selectedMonths = Array.from(event.target.selectedOptions).map(option => option.value);
+
+        if (bonusType === 'Half-yearly' && selectedMonths.length > 2) {
+            alert("You can only select **TWO** months for Half-yearly bonuses.");
+            event.target.options[event.target.selectedIndex].selected = false; // Deselect the last selected option
+        }
+    }
+
     document.addEventListener("DOMContentLoaded", function() {
         updateMonthField();
+
+        // Add event listener to restrict selections
+        document.getElementById('month').addEventListener('change', limitHalfYearlySelection);
     });
 
-    document.getElementById('bonusType').addEventListener('change', updateMonthField);
+    document.getElementById('bonusType').addEventListener('change', function() {
+        updateMonthField();
+        document.getElementById('month').addEventListener('change', limitHalfYearlySelection);
+    });
 </script>
 @endsection

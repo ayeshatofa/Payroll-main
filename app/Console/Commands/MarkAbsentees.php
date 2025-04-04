@@ -34,18 +34,25 @@ class MarkAbsentees extends Command
         $currentMonth = Carbon::now()->format('F');
         $users = User::where('role', '!=', 'admin') 
                     ->whereDoesntHave('attendances', function ($query) use ($today) {
-                        $query->whereDate('date', $today);
+                        $query->whereDate('date', $today)
+                              ->where('status', '!=', 'Leave')
+                              ->where('status', '!=', 'Holiday');
                     })
                     ->get();
+        
+        $isHoliday = Carbon::now()->isThursday() || Carbon::now()->isFriday();
 
         foreach ($users as $user) {
+            $status = $isHoliday ? 'Holiday' : 'Absent';
             Attendance::create([
                 'user_id' => $user->id,
                 'date' => $today,
-                'status' => 'Absent',
+                'status' => $status,
                 'month' => $currentMonth
             ]);
         }
+
+
 
         $this->info('Absentees marked successfully.');
     }

@@ -38,11 +38,11 @@
                                     <div class="d-flex justify-content-center">
                                         <a href="{{ route('salary.edit', $salary->salary_id) }}" class="btn btn-success me-2">Edit</a>
                                         <a href="{{ route('salary.show', $salary->salary_id) }}" class="btn btn-info me-2">Show</a>
-                                        <form action="{{ route('salary.destroy', $salary->salary_id) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this salary?')">
+                                        {{-- <form action="{{ route('salary.destroy', $salary->salary_id) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this salary?')">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">Delete</button>
-                                        </form>
+                                        </form> --}}
                                     </div>
                                 </td>
                             </tr>

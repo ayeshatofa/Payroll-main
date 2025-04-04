@@ -30,22 +30,29 @@
 
             <!-- Overview Cards -->
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-sm p-3 mb-4">
                         <h5 class="card-title">Total Users</h5>
                         <p class="card-text display-6">120</p>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-sm p-3 mb-4">
                         <h5 class="card-title">New Reports</h5>
                         <p class="card-text display-6">15</p>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card shadow-sm p-3 mb-4">
                         <h5 class="card-title">Active Sessions</h5>
                         <p class="card-text display-6">30</p>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card shadow-sm p-3 mb-4">
+                        <h5 class="card-title">Feedback List</h5>
+                        <p class="card-text display-6">Here you can see your employees feedback</p>
+                        <a href="{{ route('feedback.indexAdmin') }}" class="btn btn-primary">Click</a>
                     </div>
                 </div>
             </div>

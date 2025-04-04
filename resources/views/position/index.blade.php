@@ -19,7 +19,7 @@
                             <th>#</th> 
                             <th>Position ID</th>
                             <th>Position Name</th>
-                            <th>Actions</th>
+                            {{-- <th>Actions</th> --}}
                         </tr>
                     </thead>
                     <tbody>
@@ -28,12 +28,12 @@
                                 <td>{{ $loop->iteration }}</td> 
                                 <td>{{ $position->id }}</td>
                                 <td>{{ $position->name }}</td>
-                                <td>
+                                {{-- <td>
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('position.edit', $position->id) }}" class="btn btn-success me-2">Edit</a>
-                                        {{-- <a href="{{ route('position.show', $department->dep_id) }}" class="btn btn-info me-2">Show</a> --}}
+                                        <a href="{{ route('position.edit', $position->id) }}" class="btn btn-success me-2">Edit</a> --}}
+                                        {{-- <a href="{{ route('position.show', $department->dep_id) }}" class="btn btn-info me-2">Show</a>
                                     </div>
-                                </td>
+                                </td> --}}
                             </tr>
                         @endforeach
                     </tbody>

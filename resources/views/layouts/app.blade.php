@@ -86,7 +86,7 @@
                                     <a class="nav-link" href="{{ route('profile.show') }}">{{ __('My Profile') }}</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('attendance.create') }}">{{ __('Attendance') }}</a>
+                                    <a class="nav-link" href="{{ route('attendances.create') }}">{{ __('Attendance') }}</a>
                                 </li>
                             @endif
 

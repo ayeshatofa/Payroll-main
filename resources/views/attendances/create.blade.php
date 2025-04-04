@@ -18,7 +18,7 @@
                     <div class="alert alert-danger">{{ session('error') }}</div>
                 @endif
 
-                <form action="{{ route('attendance.store') }}" method="post">
+                <form action="{{ route('attendances.store') }}" method="post">
                     @csrf
 
                     <div class="mb-4">

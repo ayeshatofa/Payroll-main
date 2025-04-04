@@ -97,7 +97,7 @@
 
                 
                 <div class="row">
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
                               <h5 class="card-title">Attendances History</h5>
@@ -106,7 +106,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
                               <h5 class="card-title">Deduction List</h5>
@@ -115,7 +115,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
                         <div class="card" style="width: 18rem;">
                             <div class="card-body">
                               <h5 class="card-title">Bonus List</h5>
@@ -124,7 +124,15 @@
                             </div>
                         </div>
                     </div>
-                    
+                    <div class="col-md-3">
+                        <div class="card" style="width: 18rem;">
+                            <div class="card-body">
+                              <h5 class="card-title">Feedback List</h5>
+                              <p class="card-text">Here you can give see your feedback list</p>
+                              <a href="{{ route('feedback.index') }}" class="btn btn-primary">Click</a>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                
                

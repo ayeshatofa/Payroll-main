@@ -27,7 +27,7 @@ class PaymentController extends Controller
             $user->has_paid = Transaction::where('user_id', $user->id)
                                          ->where('month', $currentMonth)
                                          ->exists(); // Check if there's any transaction for this user in the current month
-        }
+        } 
         return view('stripe.index', compact('users'));
     }
 
@@ -82,8 +82,8 @@ class PaymentController extends Controller
         $record = $record->first();
         $user = User::find($userId);
         // $to = $user->email;
-        $to = "ayeshasultanatofa1002@gmail.com";
-        Mail::to($to)->send(new PayEmail($user, $record));
+        $to = "ayeshasultanatofa398@gmail.com";
+        Mail::to($to)->send(new PayEmail($user, $record, $charge));
          
         return redirect()->route('stripe.index')->with('success', "Payment has been successfully processed for $user->name");
     }

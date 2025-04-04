@@ -6,10 +6,12 @@ use App\Http\Controllers\BonusController;
 use App\Http\Controllers\DeductionController;
 use App\Http\Controllers\DepartmentController;
 use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\AttendanceController;
+use App\Http\Controllers\AttendancesController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PositionController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\AdminAttendanceController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Http\Request;
 /*
@@ -51,7 +53,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('admin/search', [AdminController::class, 'search'])->name('admin.search');
     Route::get('autocomplete', [AdminController::class, 'autocomplete'])->name('autocomplete');
     Route::get('admin/searchForm', [AdminController::class, 'searchForm'])->name('admin.searchForm');
+    Route::get('admin/feedback', [AdminController::class, 'indexAdmin'])->name('feedback.indexAdmin');
     Route::resource('admin', AdminController::class);
+    Route::resource('attendance', AdminAttendanceController::class);
     Route::resource('position', PositionController::class);
     Route::resource('salary', SalaryController::class);
     Route::get('bonus/{bonus}/edit', [BonusController::class, 'edit'])->name('bonus.edit');
@@ -77,8 +81,9 @@ Route::middleware(['auth', 'user', 'verified'])->group(function () {
     Route::put('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
     Route::get('/profile/{user_id}/invoice', [ProfileController::class, 'invoice'])->name('profile.invoice');
     Route::get('/profile/invoice/{id}/download', [ProfileController::class, 'downloadInvoice'])->name('profile.invoice.download');
-    Route::get('/attendance', [AttendanceController::class, 'create'])->name('attendance.create');
-    Route::post('/attendance', [AttendanceController::class, 'store'])->name('attendance.store');
+    Route::get('/attendances', [AttendancesController::class, 'create'])->name('attendances.create');
+    Route::post('/attendances', [AttendancesController::class, 'store'])->name('attendances.store');
+    Route::resource('feedback', FeedbackController::class);
 });
 
 

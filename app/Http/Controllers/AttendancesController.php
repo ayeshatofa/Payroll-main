@@ -7,19 +7,35 @@ use App\Models\Attendance;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
 
-class AttendanceController extends Controller
+class AttendancesController extends Controller
 {
     public function create()
     {
         $attendance = Attendance::where('user_id', Auth::id())
             ->where('date', now()->toDateString())
             ->first();
-        return view('attendance.create', compact('attendance'));
+        return view('attendances.create', compact('attendance'));
     }
 
     // Handle Check-In
     public function store(Request $request)
     {
+        if (Carbon::now()->isThursday() || Carbon::now()->isFriday()) {
+            Attendance::create([
+                'user_id' => Auth::id(),
+                'date' => Carbon::now()->toDateString(),
+                'month' => Carbon::now()->format('F'),
+                'status' => 'Holiday'
+            ]);
+            return redirect()->back()->with('success', 'You cannot give attendance on a holiday!');
+        }
+        $existingAttendanceLeave = Attendance::where('user_id', Auth::id())
+                    ->where('date', now()->toDateString())
+                    ->where('status', 'Leave')
+                    ->first();
+        if ($existingAttendanceLeave) {
+            return redirect()->back()->with('success', 'You cannot give attendance on a leave!');
+        }
         $existingAttendance = Attendance::where('user_id', Auth::id())
             ->where('date', now()->toDateString())
             ->first();

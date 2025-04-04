@@ -9,6 +9,7 @@ use App\Models\Deduction;
 use App\Models\Salary;
 use App\Models\Position;
 use App\Models\Department;
+use App\Models\Feedback;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
@@ -27,6 +28,12 @@ class AdminController extends Controller
     public function index()
     {
         return view('admin.index');
+    }
+
+    public function indexAdmin()
+    {
+        $feedbacks = Feedback::with('user:id,name')->latest()->get();
+        return view('feedback.indexAdmin', compact('feedbacks'));
     }
 
     /**
@@ -69,8 +76,10 @@ class AdminController extends Controller
      */
     public function edit($id)
     {
+        $positions = Position::all();
         $user = User::find($id);
-        return view('admin.edit')->with('user', $user);
+        $departments = Department::all();
+        return view('admin.edit')->with('user', $user)->with('positions', $positions)->with('departments', $departments);
     }
 
     /**
@@ -88,7 +97,7 @@ class AdminController extends Controller
 
         $grade = Salary::whereJsonContains('position', $request->position)->value('grade');
 
-
+        // dd($grade);
 
         // $grade = match ($request->position) {
         //     'VC' => 1,
@@ -124,7 +133,7 @@ class AdminController extends Controller
         foreach ($records as $record) {
             $bonusData[$record->id] = ['month' => $record->month]; 
         }
-        
+        // dd($bonusData);
         $user->bonuses()->sync($bonusData); 
  
         // for deduction
@@ -137,11 +146,11 @@ class AdminController extends Controller
                                             ->whereNull('gradeNumbers')
                                             ->pluck('id')
                                             ->toArray();
-
+                                            
         $records = $user->grade !== null
         ? Deduction::whereJsonContains('gradeNumbers', (string) $user->grade)->get()
         : collect(); 
-
+        
         // Attach all deduction records to the user
         $deduction_ids = [];
         foreach ($records as $record) {

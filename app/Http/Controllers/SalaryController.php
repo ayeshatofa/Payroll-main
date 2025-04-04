@@ -89,9 +89,13 @@ class SalaryController extends Controller
      * @param  \App\Models\Salary  $salary
      * @return \Illuminate\Http\Response
      */
-    public function show(Salary $salary)
+    public function show($id)
     {
-        return view('salary.show')->with('salary',$salary);
+        // return view('salary.show')->with('salary',$salary);
+        $salary = Salary::findOrFail($id);
+        $users = User::where('grade', $salary->grade)->get();
+ 
+        return view('salary.show', compact('salary', 'users'));
     }
 
     /**

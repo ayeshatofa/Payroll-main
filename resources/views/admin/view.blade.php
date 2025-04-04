@@ -37,6 +37,7 @@
                         <td>{{ $user->date_of_join}}</td>
                         <td>
                             <a href="{{ route('admin.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                            <a href="{{ route('attendance.edit', $user->id) }}" class="btn btn-warning btn-sm">Edit Attendance</a>
                             <form action="{{ route('admin.destroy', $user->id) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure to delete this user?')">
                                 @csrf
                                 @method('DELETE')

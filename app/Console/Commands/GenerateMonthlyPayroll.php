@@ -79,9 +79,9 @@ class GenerateMonthlyPayroll extends Command
                             ->sum('deductions.rate');
             $deduction = $salary * ($deductionRate/100);
             $fine = 0;
-            if($total_attended > 3)
+            if($attendanceCount > 3)
             {
-                $fine = $total_attended - 3;
+                $fine = $attendanceCount - 3;
                 $fine *= 500;
             }
             $fine += ($lateCount * 100);

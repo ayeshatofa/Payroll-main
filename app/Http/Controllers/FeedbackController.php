@@ -2,20 +2,27 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Feedback;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
-class PositionController extends Controller
+class FeedbackController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function __construct()
+    {
+        $this->middleware('user');
+    }
     public function index()
     {
-        $positions = DB::table('positions')->get();
-        return view('position.index')->with('positions', $positions);
+        $user = auth()->user();
+        $feedbacks = Feedback::where('user_id', $user->id)->get();
+        return view('feedback.index', compact('feedbacks'));
     }
 
     /**
@@ -25,7 +32,7 @@ class PositionController extends Controller
      */
     public function create()
     {
-        return view('position.create');
+        return view('feedback.create');
     }
 
     /**
@@ -37,13 +44,16 @@ class PositionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|max:255',
+            'description' => 'required|string|max:500',
         ]);
-        $positions = DB::table('positions')->insert([
-            'name' => $request->name,
-            
+
+        Feedback::create([
+            'user_id' => auth()->user()->id,
+            'description' => $request->description,
+            'date_of_submission' =>  Carbon::now()->toDateString(),
         ]);
-        return redirect()->route('position.index')->with('msg', 'Position created successfully');
+
+        return redirect()->route('feedback.index')->with('success', 'Feedback submitted successfully!');
     }
 
     /**
@@ -54,7 +64,7 @@ class PositionController extends Controller
      */
     public function show($id)
     {
-        //
+        return view('feedback.show', compact('feedback'));
     }
 
     /**
@@ -63,9 +73,10 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Position $position)
+    public function edit($id)
     {
-        // return view('position.edit')->with('postion',$position);
+        
+       //
     }
 
     /**
@@ -75,17 +86,9 @@ class PositionController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Position $position)
+    public function update(Request $request, $id)
     {
-        // $request->validate([
-        //     'name' => 'required|max:255',
-        // ]);
-        // //$departments = DB::table('departments')->where('emp_id', $department->emp_id)->update([
-        //     //'dep_name' => $request->dep_name,
-        // $positions = DB::table('positions')->where('id', $position->id)->update([
-        //         'name' => $request->name,   
-        // ]);
-        // return redirect()->route('position.index')->with('msg', 'Position updated successfully');
+       //
     }
 
     /**
@@ -96,6 +99,9 @@ class PositionController extends Controller
      */
     public function destroy($id)
     {
-        //
+       
+        $feedback->delete();
+        return redirect()->route('feedback.index')->with('success', 'Feedback deleted successfully!');
+    
     }
 }
