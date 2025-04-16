@@ -1,6 +1,6 @@
 @extends('layouts.app') 
 @section('title')
-    Deduction Details
+    Bonus Details
 @endsection
 
 @section('content')
@@ -9,18 +9,18 @@
     <div class="col-md-8 offset-md-2"> {{-- Center the card --}}
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h4>Deduction Details</h4>
-                <a href="{{ route('deduction.index') }}" class="btn btn-primary">Back to Deduction List</a>
+                <h4>Bonus Details</h4>
+                <a href="{{ route('bonus.index') }}" class="btn btn-primary">Back to Bonus List</a>
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <h5 class="text-muted">Deduction Name</h5>
-                    <p class="fw-bold">{{ $deduction->name }}</p>
+                    <h5 class="text-muted">Bonus Name</h5>
+                    <p class="fw-bold">{{ $bonus->name }}</p>
                 </div>
 
                 {{-- Display users under the same grade --}}
                 <div class="mb-3">
-                    <h5 class="text-muted">Users under the same deduction</h5>
+                    <h5 class="text-muted">Users under the same bonus</h5>
                     @if($users->count() > 0)
                         <ul class="list-group">
                             @foreach($users as $user)

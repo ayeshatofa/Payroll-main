@@ -19,7 +19,7 @@ class DeductionSeeder extends Seeder
             [
                 'name' => 'Lunch',
                 'rate' => 5, 
-                
+                'gradeNumbers' => null
             ],
             [
                 'name' => 'Provident Fund',

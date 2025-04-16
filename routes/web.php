@@ -61,6 +61,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('bonus/{bonus}/edit', [BonusController::class, 'edit'])->name('bonus.edit');
     Route::put('bonus/{bonus}', [BonusController::class, 'update'])->name('bonus.update');
     Route::delete('bonus/{bonus}', [BonusController::class, 'destroy'])->name('bonus.destroy');
+    Route::get('bonus/{bonus}', [BonusController::class, 'show'])->name('bonus.show');
     Route::resource('bonus', BonusController::class)->only(['index', 'create', 'store']);
     Route::get('stripe', [PaymentController::class, 'index'])->name('stripe.index');
     Route::get('stripe/{id}/create', [PaymentController::class, 'create'])->name('stripe.create');

@@ -22,13 +22,13 @@ class DatabaseSeeder extends Seeder
         // ]);
 
         $this->call([
-            PositionSeeder::class,
-            SalarySeeder::class,
-            DepartmentSeeder::class,
-            BonusSeeder::class,
-            DeductionSeeder::class,
-            UserSeeder::class,
-            UserBonusAndDeductionSeeder::class,
+            // PositionSeeder::class,
+            // SalarySeeder::class,
+            // DepartmentSeeder::class,
+            // BonusSeeder::class,
+            // DeductionSeeder::class,
+            // UserSeeder::class,
+            // UserBonusAndDeductionSeeder::class,
             AttendanceSeeder::class,
             AdminSeeder::class,
         ]);

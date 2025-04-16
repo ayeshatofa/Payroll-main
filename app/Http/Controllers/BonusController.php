@@ -84,7 +84,10 @@ class BonusController extends Controller
      */
     public function show($id)
     {
-        //
+        $bonus = Bonus::findOrFail($id);
+        $users = $bonus->users()->where('bonus_id', $bonus->id)->get();
+ 
+        return view('bonus.show', compact('bonus', 'users'));
     }
 
     /**

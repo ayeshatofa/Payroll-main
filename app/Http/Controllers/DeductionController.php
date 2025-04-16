@@ -82,7 +82,10 @@ class DeductionController extends Controller
      */
     public function show($id)
     {
-        return view('deduction.show')->with('deductiont',$department);
+        $deduction = Deduction::findOrFail($id);
+        $users = $deduction->users()->where('deduction_id', $deduction->id)->get();
+ 
+        return view('deduction.show', compact('deduction', 'users'));
     }
     
 

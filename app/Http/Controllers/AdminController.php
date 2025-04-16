@@ -27,7 +27,8 @@ class AdminController extends Controller
 
     public function index()
     {
-        return view('admin.index');
+        $userCount = User::where('role', '!=', 'admin')->count();
+        return view('admin.index', compact('userCount'));
     }
 
     public function indexAdmin()

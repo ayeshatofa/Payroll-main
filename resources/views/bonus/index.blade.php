@@ -44,7 +44,7 @@
                               </td>
                               <td>
                                   <a href="{{ route('bonus.edit', $bonus->id) }}" class="btn btn-warning btn-sm">Edit</a>
-                                  
+                                  <a href="{{ route('bonus.show', $bonus->id) }}" class="btn btn-warning btn-sm">Show</a>
                                   <form action="{{ route('bonus.destroy', $bonus->id) }}" method="POST" class="d-inline" 
                                         onsubmit="return confirm('Are you sure you want to delete this bonus?');">
                                       @csrf

@@ -46,6 +46,7 @@
                                     </td>
                                     <td>
                                         <a href="{{ route('deduction.edit', $deduction->id) }}" class="btn btn-warning btn-sm">Edit</a>
+                                        <a href="{{ route('deduction.show', $deduction->id) }}" class="btn btn-warning btn-sm">Show</a>
                                         <form action="{{ route('deduction.destroy', $deduction->id) }}" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this deduction?')">
                                             @csrf
                                             @method('DELETE')

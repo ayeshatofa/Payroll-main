@@ -10,7 +10,7 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4>Salary List</h4>
-                <a href="{{ route('salary.create') }}" class="btn btn-primary">+ Add Department</a>
+                <a href="{{ route('salary.create') }}" class="btn btn-primary">+ Add Salary</a>
             </div>
             <div class="card-body">
                 <table class="table table-striped table-bordered text-center">
